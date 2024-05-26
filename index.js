@@ -49,22 +49,22 @@ app.post("/api/uploads", upload.single("file"), (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
-  async function uploadFile(req, res) {
-    try {
-      const imagePath = path.join(__dirname, "uploads", req.file.filename);
-
-      const {
-        data: { text },
-      } = await Tesseract.recognize(imagePath, "eng", {
-        logger: (m) => console.log(m),
-      });
-
-      res.json({ text });
-    } catch (error) {
-      console.error("Error processing image:", error);
-      res.status(500).json({ error: "Error processing image" });
-    }
-  }
-
   uploadFile(req, res);
 });
+
+async function uploadFile(req, res) {
+  try {
+    const imagePath = path.join(__dirname, "uploads", req.file.filename);
+
+    const {
+      data: { text },
+    } = await Tesseract.recognize(imagePath, "eng", {
+      logger: (m) => console.log(m),
+    });
+
+    res.json({ text });
+  } catch (error) {
+    console.error("Error processing image:", error);
+    res.status(500).json({ error: "Error processing image" });
+  }
+}
